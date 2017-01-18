@@ -1,0 +1,17 @@
+---
+- name: install nginx
+  apt: name=nginx state=installed
+
+- name: write our nginx.conf
+  template: src=/vagrant/ansible/subtasks/nginx/nginx.conf dest=/etc/nginx/nginx.conf
+  notify: restart nginx
+
+- name: write our /etc/nginx/sites-available/default
+  template: src=/vagrant/ansible/subtasks/nginx/default_site dest=/etc/nginx/sites-available/default
+  notify: restart nginx
+
+- name: deploy website content
+  template: src=subtasks/nginx/index.htm dest=/usr/share/nginx/html/index.html
+  
+- name: deploy website php
+  template: src=subtasks/nginx/index.php dest=/usr/share/nginx/html/index.php

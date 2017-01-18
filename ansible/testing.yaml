@@ -1,0 +1,122 @@
+---
+
+# common
+- hosts: all
+  sudo: yes
+
+  tasks:
+
+  - name: install git
+    apt: name=git state=installed update_cache=yes
+
+- hosts: all
+  sudo: yes
+
+#php5
+  tasks:
+
+  - name: install php packages
+    apt: name={{ item }} update_cache=yes state=latest
+    with_items:
+      - mcrypt
+      - php5-cli
+      - php5-sqlite
+      - sqlite3    
+      
+# loadbalancer
+- hosts: loadbalancer
+  sudo: yes  
+    
+  tasks:
+
+  - name: install haproxy and socat
+    apt: pkg={{ item }} state=latest
+    with_items:
+    - haproxy
+    - socat
+
+  - name: enable haproxy
+    lineinfile: dest=/etc/default/haproxy regexp="^ENABLED" line="ENABLED=1"
+    notify: restart haproxy 
+
+  - name: deploy haproxy config
+    template: src=/vagrant/ansible/templates/haproxy.cfg dest=/etc/haproxy/haproxy.cfg
+    notify: restart haproxy
+
+  handlers:
+
+  - name: restart haproxy
+    service: name=haproxy state=restarted
+ 
+ #loadbalancer mysql
+- hosts: loadbalancer
+  vars:
+    mysql_root_password: 1234
+  tasks:
+  - name: Install MySQL
+    apt: name={{ item }} update_cache=yes cache_valid_time=3600 state=present
+    sudo: yes
+    with_items:
+    - python-mysqldb
+    - mysql-server
+  #- name: copy cnf
+  #  copy: src=.my.cnf dest=~/.my.cnf owner=ubuntu mode=0644
+  #  sudo: yes
+  - name: Start the MySQL service
+    sudo: yes
+    service: 
+      name: mysql 
+      state: started
+      enabled: true
+  - name: update mysql root password for all root accounts
+    sudo: yes
+    mysql_user: 
+      name: root 
+      host: "{{ item }}" 
+      password: "{{ mysql_root_password }}"
+      login_user: root
+      login_password: "{{ mysql_root_password }}"
+      check_implicit_admin: yes
+      priv: "*.*:ALL,GRANT"
+    with_items:
+      - "{{ ansible_hostname }}"
+      - 127.0.0.1
+      - ::1
+      - localhost 
+      
+  - name: populate db with two images
+    local_action: shell sudo bash /home/vagrant/ansible/subtasks/setupdb.sh
+    sudo: no
+
+ # application
+ #We should be usine hosts: application here, just like the ansible.ini file lays out. 
+ #however, due to a bug with the current version, the paybook was skipping this. 
+ #this will push out nginx to the load balancer too, but it won't broadcast, not the neatest solution, but this isn't a live deployment. 
+- hosts: all
+  sudo: yes
+  
+  tasks:
+
+  - name: install nginx
+    apt: name=nginx state=installed
+
+  - name: write our nginx.conf
+    template: src=/vagrant/ansible/subtasks/nginx/nginx.conf  dest=/etc/nginx/nginx.conf
+    notify: restart nginx
+
+  - name: write our /etc/nginx/sites-available/default
+    template: src=/vagrant/ansible/subtasks/nginx/default_site dest=/etc/nginx/sites-available/default
+    notify: restart nginx
+
+  - name: deploy website content
+    template: src=subtasks/nginx/index.html dest=/usr/share/nginx/html/index.html
+ 
+  - name: deploy website php
+    template: src=subtasks/nginx/index.php dest=/usr/share/nginx/html/index.php
+    
+  handlers:
+
+  - name: restart nginx
+    service: name=nginx state=restarted
+
+    

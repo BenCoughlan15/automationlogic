@@ -1,0 +1,32 @@
+OS - Windows 10 - 
+
+Running Vagrant with VirtualBox, and using a mixture of ansible and vagrant to provision everything. 
+For such a simple configuration, the server config steps could be done just as easily with vagrant, or ansible, however, in real world scenario's you ould use both. 
+
+Env Variables - 
+C:\Program Files\Git\usr\bin
+C:\Program Files\Oracle\VirtualBox
+C:\HashiCorp\Vagrant\bin
+
+#The following cost me eight hours, and some hair. 
+Enable hardware virtualization on your host, it's one of the few listed options in the BIOS. 
+Turn off Hyper V, this messes with virtualbox and VMware tools. 
+
+
+Step 1 
+Install Virtualbox - Version - VirtualBox 5.1.12 platform packages.
+URL : https://www.virtualbox.org/wiki/Downloads
+
+Step 2 
+Install Vagrant - Version - 1.9.1
+URL : https://www.vagrantup.com/downloads.html
+
+Step 3
+We want ssh, without messing around with OpenSSH or anything with big words like marmalade. 
+Install Git for windows - Version - 2.11.0
+URL : https://git-scm.com/download/win
+
+Step 4 
+Run vagrand box add - with the following options - puppetlabs/ubuntu-14.04-64-nocm
+https://vagrantcloud.com/puppetlabs/boxes/ubuntu-14.04-64-nocm
+
