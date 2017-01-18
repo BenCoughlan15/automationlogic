@@ -1,4 +1,4 @@
-Proof application is working. 
+Proof application is working. (click the image link for YouTube video)
 
 [![running vagrant up](http://img.youtube.com/vi/wc2MSO4tpKE/0.jpg)](https://www.youtube.com/watch?v=wc2MSO4tpKE"running vagrant up")
 
