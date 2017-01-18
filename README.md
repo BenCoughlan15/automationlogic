@@ -1,3 +1,7 @@
+Proof application is working. 
+
+[![running vagrant up](http://img.youtube.com/vi/wc2MSO4tpKE/0.jpg)](https://www.youtube.com/watch?v=wc2MSO4tpKE"running vagrant up")
+
 **Environment/Setup**
 
 OS - Windows 10
