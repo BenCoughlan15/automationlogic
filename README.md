@@ -86,7 +86,7 @@ the network settings.
 
 This is pretty nasty, I’d have Nagios do this in future.
 
-![](media/image1.png){width="6.268055555555556in"
+![](README_files/image1.png){width="6.268055555555556in"
 height="0.3013888888888889in"}
 
 1.  · Again, using configuration management, update contents of
@@ -118,9 +118,9 @@ Not overly chuffed with this, I had grand plans to have it connect to a
 web server populate a database full of 1990’s spinning gif’s, but I’m
 out of time, so..
 
-![](media/image2.png){width="1.4260870516185478in"
+![](README_files/image2.png){width="1.4260870516185478in"
 height="0.8416852580927384in"}
-![](media/image3.png){width="1.5870472440944883in"
+![](README_files/image3.png){width="1.5870472440944883in"
 height="0.8548501749781278in"}
 
 1.  · Ensure your web application is available via the nginx instance.
